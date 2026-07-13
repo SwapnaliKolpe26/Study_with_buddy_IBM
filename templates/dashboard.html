@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Study With Buddy{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-md-5">
+
+  <!-- Page Header -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <h1 class="page-title mb-1">
+        <i class="bi bi-bar-chart-line-fill me-2 text-accent"></i>My Dashboard
+      </h1>
+      <p class="text-muted mb-0">Track your learning activity and progress with Buddy</p>
+    </div>
+    <a href="/chat" class="btn btn-primary">
+      <i class="bi bi-chat-heart-fill me-2"></i>Continue Learning
+    </a>
+  </div>
+
+  <!-- ── Stats Row ──────────────────────────────────────────── -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card h-100">
+        <div class="stat-icon bg-blue-soft"><i class="bi bi-chat-left-text-fill"></i></div>
+        <div class="stat-value">{{ total_messages }}</div>
+        <div class="stat-label">Total Messages</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card h-100">
+        <div class="stat-icon bg-green-soft"><i class="bi bi-question-circle-fill"></i></div>
+        <div class="stat-value">{{ student_messages }}</div>
+        <div class="stat-label">Questions Asked</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card h-100">
+        <div class="stat-icon bg-purple-soft"><i class="bi bi-journals"></i></div>
+        <div class="stat-value">{{ topics_covered | length }}</div>
+        <div class="stat-label">Topics Explored</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card h-100">
+        <div class="stat-icon bg-orange-soft"><i class="bi bi-activity"></i></div>
+        <div class="stat-value">{{ activity_log | length }}</div>
+        <div class="stat-label">Recent Activities</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Main Content Row ──────────────────────────────────── -->
+  <div class="row g-4">
+
+    <!-- Recent Activity -->
+    <div class="col-lg-7">
+      <div class="dash-card h-100">
+        <div class="dash-card-header">
+          <i class="bi bi-clock-history me-2 text-accent"></i>Recent Learning Activity
+        </div>
+        <div class="dash-card-body">
+          {% if activity_log %}
+            <ul class="activity-list">
+              {% for item in activity_log | reverse %}
+              <li class="activity-item">
+                <div class="activity-icon-wrap">
+                  <i class="bi bi-chat-dots-fill"></i>
+                </div>
+                <div class="activity-info flex-grow-1">
+                  <div class="activity-summary">{{ item.summary }}</div>
+                  <div class="activity-time text-muted small">{{ item.time }}</div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state text-center py-5">
+              <div class="empty-icon mb-3">📚</div>
+              <p class="text-muted mb-3">No activity yet.</p>
+              <a href="/chat" class="btn btn-sm btn-primary">Start chatting with Buddy!</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Topics Covered -->
+    <div class="col-lg-5">
+      <div class="dash-card h-100">
+        <div class="dash-card-header">
+          <i class="bi bi-bookmarks-fill me-2 text-accent"></i>Topics You've Explored
+        </div>
+        <div class="dash-card-body">
+          {% if topics_covered %}
+            <div class="topics-grid">
+              {% for item in topics_covered | reverse %}
+              <div class="topic-chip">
+                <span class="topic-subject badge-{{ item.subject | lower | replace(' ', '-') }}">
+                  {{ item.subject }}
+                </span>
+                <span class="topic-query text-muted">{{ item.query }}</span>
+                <span class="topic-time text-muted">{{ item.time }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty-state text-center py-5">
+              <div class="empty-icon mb-3">🔍</div>
+              <p class="text-muted mb-3">No topics tracked yet.</p>
+              <a href="/chat" class="btn btn-sm btn-primary">Explore a topic!</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /row -->
+
+  <!-- ── Subject Progress Overview ─────────────────────────── -->
+  <div class="row g-4 mt-1">
+    <div class="col-12">
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <i class="bi bi-pie-chart-fill me-2 text-accent"></i>Subject Coverage Snapshot
+        </div>
+        <div class="dash-card-body">
+          {% set all_subjects = ["Mathematics", "Science", "English", "Social Science", "Computer Science"] %}
+          {% set subject_colors = {
+            "Mathematics": "bg-blue-soft text-blue",
+            "Science": "bg-green-soft text-green",
+            "English": "bg-purple-soft text-purple",
+            "Social Science": "bg-orange-soft text-orange",
+            "Computer Science": "bg-teal-soft text-teal"
+          } %}
+          <div class="row g-3">
+            {% for subj in all_subjects %}
+              {% set count = topics_covered | selectattr("subject", "equalto", subj) | list | length %}
+              {% set pct = [((count / [topics_covered | length, 1] | max) * 100) | int, 100] | min %}
+              <div class="col-md-6 col-xl-4">
+                <div class="subject-progress-card">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-semibold small">{{ subj }}</span>
+                    <span class="badge {{ subject_colors.get(subj, 'bg-secondary') }}">{{ count }} topic{{ 's' if count != 1 }}</span>
+                  </div>
+                  <div class="progress progress-thin">
+                    <div
+                      class="progress-bar progress-{{ subj | lower | replace(' ', '-') }}"
+                      role="progressbar"
+                      style="width: {{ [pct, 5] | max }}%"
+                      aria-valuenow="{{ pct }}"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /row -->
+
+  <!-- ── Tips Card ──────────────────────────────────────────── -->
+  <div class="row g-4 mt-1">
+    <div class="col-12">
+      <div class="dash-card tips-card">
+        <div class="dash-card-header">
+          <i class="bi bi-lightbulb-fill me-2 text-warning"></i>Study Tips from Buddy
+        </div>
+        <div class="dash-card-body">
+          <div class="row g-3">
+            {% set tips = [
+              ("bi-clock", "Study in short 25-minute bursts with 5-minute breaks (Pomodoro technique)."),
+              ("bi-arrow-repeat", "Review topics you've learned within 24 hours to boost memory retention."),
+              ("bi-pencil-square", "Write notes in your own words — it helps you understand, not just memorise."),
+              ("bi-people-fill", "Explain a concept to a friend — teaching is the best way to learn!"),
+              ("bi-question-circle", "Ask Buddy to quiz you on any topic to test your understanding."),
+              ("bi-heart-fill", "Take care of yourself — sleep well, eat, and exercise. Your brain needs it!")
+            ] %}
+            {% for icon, tip in tips %}
+            <div class="col-md-6">
+              <div class="tip-item d-flex gap-3">
+                <div class="tip-icon flex-shrink-0"><i class="bi {{ icon }}"></i></div>
+                <p class="mb-0 small">{{ tip }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+{% endblock %}

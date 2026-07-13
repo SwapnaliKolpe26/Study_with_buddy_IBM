@@ -1,0 +1,776 @@
+/* ============================================================
+   Study With Buddy — Main Stylesheet
+   Uses Bootstrap 5 as a base; all custom overrides here.
+   Dark-mode support via [data-bs-theme="dark"] on <html>.
+   ============================================================ */
+
+/* ── 1. CSS Custom Properties (Light Mode) ─────────────────── */
+:root {
+  --swb-bg:           #f8f9fb;
+  --swb-surface:      #ffffff;
+  --swb-surface-alt:  #f1f3f7;
+  --swb-border:       #e4e7ed;
+  --swb-text:         #1c2333;
+  --swb-muted:        #6b7280;
+  --swb-accent:       #4f6ef2;
+  --swb-accent-hover: #3b58d8;
+  --swb-accent-soft:  #eef1fd;
+  --swb-purple:       #7c5cd8;
+  --swb-purple-soft:  #f0ebfd;
+  --swb-green:        #22c55e;
+  --swb-green-soft:   #edfaf3;
+  --swb-orange:       #f97316;
+  --swb-orange-soft:  #fff4ed;
+  --swb-teal:         #0ea5e9;
+  --swb-teal-soft:    #e0f5fe;
+  --swb-red:          #ef4444;
+  --nav-height:       64px;
+  --sidebar-width:    220px;
+  --radius-sm:        8px;
+  --radius-md:        12px;
+  --radius-lg:        18px;
+  --shadow-sm:        0 1px 4px rgba(0,0,0,.06);
+  --shadow-md:        0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:        0 8px 32px rgba(0,0,0,.10);
+  --transition:       all .2s ease;
+}
+
+/* Dark mode overrides */
+[data-bs-theme="dark"] {
+  --swb-bg:          #0f1117;
+  --swb-surface:     #1a1d27;
+  --swb-surface-alt: #22263a;
+  --swb-border:      #2d3248;
+  --swb-text:        #e8eaf0;
+  --swb-muted:       #8b95b0;
+  --swb-accent-soft: #1e2545;
+  --swb-purple-soft: #201a38;
+  --swb-green-soft:  #0e2418;
+  --swb-orange-soft: #261708;
+  --swb-teal-soft:   #09202e;
+  --shadow-sm:       0 1px 4px rgba(0,0,0,.3);
+  --shadow-md:       0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg:       0 8px 32px rgba(0,0,0,.5);
+}
+
+/* ── 2. Global Reset & Base ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: var(--swb-bg);
+  color: var(--swb-text);
+  line-height: 1.65;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color .3s ease, color .3s ease;
+}
+
+main { flex: 1 0 auto; }
+
+/* ── 3. Utility Color Helpers ───────────────────────────────── */
+.text-accent  { color: var(--swb-accent)  !important; }
+.text-blue    { color: var(--swb-accent)  !important; }
+.text-green   { color: var(--swb-green)   !important; }
+.text-purple  { color: var(--swb-purple)  !important; }
+.text-orange  { color: var(--swb-orange)  !important; }
+.text-teal    { color: var(--swb-teal)    !important; }
+
+.bg-blue-soft   { background-color: var(--swb-accent-soft) !important; color: var(--swb-accent)  !important; }
+.bg-purple-soft { background-color: var(--swb-purple-soft) !important; color: var(--swb-purple)  !important; }
+.bg-green-soft  { background-color: var(--swb-green-soft)  !important; color: var(--swb-green)   !important; }
+.bg-orange-soft { background-color: var(--swb-orange-soft) !important; color: var(--swb-orange)  !important; }
+.bg-teal-soft   { background-color: var(--swb-teal-soft)   !important; color: var(--swb-teal)    !important; }
+
+/* ── 4. Navigation ──────────────────────────────────────────── */
+#mainNav {
+  background-color: var(--swb-surface);
+  border-bottom: 1px solid var(--swb-border);
+  height: var(--nav-height);
+  box-shadow: var(--shadow-sm);
+  z-index: 1030;
+}
+
+.brand-text   { font-size: 1.25rem; font-weight: 700; letter-spacing: -.4px; }
+.brand-accent { color: var(--swb-accent); }
+.brand-icon   { font-size: 1.4rem; }
+
+.navbar-nav .nav-link {
+  color: var(--swb-muted);
+  font-weight: 500;
+  padding: .45rem .75rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  color: var(--swb-accent);
+  background-color: var(--swb-accent-soft);
+}
+
+/* ── 5. Footer ──────────────────────────────────────────────── */
+.site-footer {
+  background-color: var(--swb-surface);
+  border-top: 1px solid var(--swb-border);
+  flex-shrink: 0;
+}
+
+/* ── 6. Hero Section ────────────────────────────────────────── */
+.hero-section {
+  padding: 80px 0 70px;
+  background: linear-gradient(145deg, var(--swb-bg) 0%, var(--swb-accent-soft) 100%);
+}
+
+.hero-badge {
+  background-color: var(--swb-accent-soft);
+  color: var(--swb-accent);
+  font-size: .8rem;
+  font-weight: 600;
+  padding: .4rem .9rem;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--swb-accent) 25%, transparent);
+}
+
+.hero-heading {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.5px;
+}
+
+.hero-accent {
+  background: linear-gradient(90deg, var(--swb-accent), var(--swb-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--swb-muted);
+  max-width: 480px;
+}
+
+.btn-hero {
+  padding: .65rem 1.6rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-size: .95rem;
+}
+.btn-hero-outline {
+  padding: .65rem 1.6rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-size: .95rem;
+  border-color: var(--swb-border);
+  color: var(--swb-text);
+}
+
+/* Hero feature cards grid */
+.hero-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.hero-feat-card {
+  background-color: var(--swb-surface);
+  border: 1px solid var(--swb-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.hero-feat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.feat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+/* ── 7. Subjects Section ────────────────────────────────────── */
+.subjects-section {
+  padding: 70px 0;
+  background-color: var(--swb-surface);
+  border-top: 1px solid var(--swb-border);
+  border-bottom: 1px solid var(--swb-border);
+}
+
+.section-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+
+.subject-card {
+  background-color: var(--swb-surface-alt);
+  border: 1px solid var(--swb-border);
+  border-radius: var(--radius-md);
+  padding: 24px 16px;
+  transition: var(--transition);
+  cursor: pointer;
+  color: var(--swb-text);
+}
+.subject-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--swb-accent);
+}
+
+.subject-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* ── 8. How It Works ────────────────────────────────────────── */
+.how-section { padding: 70px 0; }
+
+.how-card {
+  background-color: var(--swb-surface);
+  border: 1px solid var(--swb-border);
+  border-radius: var(--radius-md);
+  padding: 28px 20px;
+  transition: var(--transition);
+}
+.how-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.how-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--swb-accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: .85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.how-icon {
+  font-size: 2rem;
+  color: var(--swb-accent);
+}
+
+/* ── 9. CTA Section ─────────────────────────────────────────── */
+.cta-section {
+  padding: 70px 0;
+  background: linear-gradient(135deg, var(--swb-accent-soft), var(--swb-purple-soft));
+  border-top: 1px solid var(--swb-border);
+}
+
+.cta-heading {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+}
+
+/* ── 10. Chat Page Layout ───────────────────────────────────── */
+.chat-page-wrapper {
+  height: calc(100vh - var(--nav-height) - 52px); /* minus nav + footer */
+  overflow: hidden;
+  display: flex;
+}
+
+.chat-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: var(--swb-bg);
+}
+
+/* ── 11. Chat Sidebar ───────────────────────────────────────── */
+.chat-sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background-color: var(--swb-surface);
+  border-right: 1px solid var(--swb-border);
+  overflow-y: auto;
+  padding: 0;
+}
+
+.sidebar-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--swb-border);
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--swb-muted);
+  background-color: var(--swb-surface-alt);
+}
+
+.sidebar-section-label {
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--swb-muted);
+  padding: 14px 14px 4px;
+  margin: 0;
+}
+
+.sidebar-nav { padding: 6px 8px; }
+
+.sidebar-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: .83rem;
+  color: var(--swb-text);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+}
+.sidebar-btn:hover {
+  background-color: var(--swb-accent-soft);
+  color: var(--swb-accent);
+}
+
+.sidebar-footer {
+  padding: 10px;
+  border-top: 1px solid var(--swb-border);
+}
+
+/* ── 12. Chat Main Area ─────────────────────────────────────── */
+.chat-main { flex: 1; overflow: hidden; }
+
+.chat-header {
+  height: 64px;
+  border-bottom: 1px solid var(--swb-border);
+  background-color: var(--swb-surface);
+  flex-shrink: 0;
+}
+
+.buddy-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--swb-accent), var(--swb-purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.1rem;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--swb-green);
+  border: 2px solid var(--swb-surface);
+}
+
+/* ── 13. Chat Messages ──────────────────────────────────────── */
+.chat-messages {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--swb-border) transparent;
+}
+
+.chat-bubble-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.user-row   { justify-content: flex-end; }
+.buddy-row  { justify-content: flex-start; }
+
+.chat-bubble {
+  max-width: min(72%, 600px);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.user-bubble {
+  background: linear-gradient(135deg, var(--swb-accent), var(--swb-purple));
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.buddy-bubble {
+  background-color: var(--swb-surface);
+  border: 1px solid var(--swb-border);
+  border-bottom-left-radius: 4px;
+  color: var(--swb-text);
+}
+
+.bubble-time {
+  font-size: .68rem;
+  opacity: .65;
+  margin-top: 6px;
+  text-align: right;
+}
+
+.buddy-bubble-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--swb-accent), var(--swb-purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: .8rem;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+/* Markdown content inside Buddy's bubbles */
+.markdown-body { font-size: .93rem; line-height: 1.65; }
+.markdown-body p:last-child { margin-bottom: 0; }
+.markdown-body ul, .markdown-body ol { padding-left: 1.3rem; margin-bottom: .6rem; }
+.markdown-body code {
+  background-color: var(--swb-surface-alt);
+  border: 1px solid var(--swb-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: .83rem;
+}
+.markdown-body pre {
+  background-color: var(--swb-surface-alt);
+  border: 1px solid var(--swb-border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  overflow-x: auto;
+}
+.markdown-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: .82rem;
+}
+.markdown-body h1,.markdown-body h2,.markdown-body h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: .8rem 0 .3rem;
+}
+.markdown-body strong { font-weight: 700; }
+.markdown-body blockquote {
+  border-left: 3px solid var(--swb-accent);
+  padding-left: 12px;
+  color: var(--swb-muted);
+  margin: .5rem 0;
+}
+
+/* ── 14. Typing Indicator ───────────────────────────────────── */
+.typing-bubble { padding: 14px 18px; }
+
+.typing-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--swb-muted);
+  animation: typing-bounce 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes typing-bounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: .4; }
+  40%           { transform: scale(1.0); opacity: 1;  }
+}
+
+/* ── 15. Suggestion Chips (welcome screen) ──────────────────── */
+.welcome-block .welcome-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--swb-accent), var(--swb-purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+}
+
+.suggestion-chip {
+  background-color: var(--swb-surface);
+  border: 1px solid var(--swb-border);
+  color: var(--swb-text);
+  font-size: .8rem;
+  border-radius: 20px;
+  padding: .35rem .9rem;
+  transition: var(--transition);
+}
+.suggestion-chip:hover {
+  background-color: var(--swb-accent-soft);
+  border-color: var(--swb-accent);
+  color: var(--swb-accent);
+}
+
+/* ── 16. Chat Input Area ────────────────────────────────────── */
+.chat-input-area {
+  border-top: 1px solid var(--swb-border);
+  background-color: var(--swb-surface);
+}
+
+.chat-textarea {
+  resize: none;
+  border-radius: var(--radius-md) !important;
+  background-color: var(--swb-surface-alt);
+  border-color: var(--swb-border);
+  color: var(--swb-text);
+  font-size: .9rem;
+  padding: 10px 14px;
+  padding-right: 60px;
+  min-height: 44px;
+  max-height: 140px;
+  line-height: 1.5;
+  transition: var(--transition);
+}
+.chat-textarea:focus {
+  border-color: var(--swb-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--swb-accent) 18%, transparent);
+  background-color: var(--swb-surface);
+}
+
+.char-count {
+  position: absolute;
+  bottom: 8px;
+  right: 14px;
+  font-size: .68rem;
+  pointer-events: none;
+}
+
+.send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+.send-btn:disabled { opacity: .5; }
+
+.input-hint { font-size: .72rem; }
+kbd { font-size: .7rem; }
+
+/* ── 17. Dashboard ──────────────────────────────────────────── */
+.page-title { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 700; }
+
+.stat-card {
+  background-color: var(--swb-surface);
+  border: 1px solid var(--swb-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: center;
+  transition: var(--transition);
+}
+.stat-card:hover { box-shadow: var(--shadow-md); }
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 12px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label { font-size: .8rem; color: var(--swb-muted); }
+
+/* Dashboard cards */
+.dash-card {
+  background-color: var(--swb-surface);
+  border: 1px solid var(--swb-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.dash-card-header {
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: .9rem;
+  border-bottom: 1px solid var(--swb-border);
+  background-color: var(--swb-surface-alt);
+}
+
+.dash-card-body { padding: 16px 18px; }
+
+/* Activity list */
+.activity-list { list-style: none; padding: 0; margin: 0; }
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--swb-border);
+}
+.activity-item:last-child { border-bottom: none; }
+
+.activity-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--swb-accent-soft);
+  color: var(--swb-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .9rem;
+  margin-top: 2px;
+}
+
+.activity-summary { font-size: .87rem; color: var(--swb-text); }
+.activity-time    { font-size: .73rem; }
+
+/* Topics grid */
+.topics-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.topic-chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--swb-border);
+  font-size: .82rem;
+}
+.topic-chip:last-child { border-bottom: none; }
+
+.topic-subject {
+  font-size: .7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+/* Subject badge colors */
+.badge-mathematics     { background-color: var(--swb-accent-soft); color: var(--swb-accent); }
+.badge-science         { background-color: var(--swb-green-soft);  color: var(--swb-green);  }
+.badge-english         { background-color: var(--swb-purple-soft); color: var(--swb-purple); }
+.badge-social-science  { background-color: var(--swb-orange-soft); color: var(--swb-orange); }
+.badge-computer-science{ background-color: var(--swb-teal-soft);   color: var(--swb-teal);   }
+
+.topic-query { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topic-time  { font-size: .7rem; white-space: nowrap; }
+
+/* Subject progress */
+.subject-progress-card { padding: 4px 0; }
+
+.progress-thin {
+  height: 6px;
+  border-radius: 6px;
+  background-color: var(--swb-surface-alt);
+}
+
+.progress-bar { border-radius: 6px; transition: width .6s ease; }
+.progress-mathematics     { background-color: var(--swb-accent);  }
+.progress-science         { background-color: var(--swb-green);   }
+.progress-english         { background-color: var(--swb-purple);  }
+.progress-social-science  { background-color: var(--swb-orange);  }
+.progress-computer-science{ background-color: var(--swb-teal);    }
+
+/* Tips card */
+.tips-card .tip-item { align-items: flex-start; }
+
+.tip-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--swb-orange-soft);
+  color: var(--swb-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .9rem;
+}
+
+/* Empty state */
+.empty-state .empty-icon { font-size: 2.5rem; }
+
+/* ── 18. Buttons & Misc Overrides ───────────────────────────── */
+.btn-primary {
+  background-color: var(--swb-accent);
+  border-color: var(--swb-accent);
+  color: #fff;
+  font-weight: 500;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--swb-accent-hover);
+  border-color: var(--swb-accent-hover);
+}
+
+/* ── 19. Scrollbar Styling ──────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: var(--swb-border); border-radius: 10px; }
+
+/* ── 20. Responsive Tweaks ──────────────────────────────────── */
+@media (max-width: 991.98px) {
+  .chat-page-wrapper {
+    height: calc(100vh - var(--nav-height) - 52px);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hero-section { padding: 50px 0 40px; }
+  .hero-card-grid { grid-template-columns: 1fr; }
+  .how-section, .subjects-section, .cta-section { padding: 48px 0; }
+
+  .chat-page-wrapper {
+    height: calc(100dvh - var(--nav-height) - 52px);
+  }
+  .chat-bubble { max-width: 88%; }
+}

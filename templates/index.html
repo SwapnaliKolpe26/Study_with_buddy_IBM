@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Study With Buddy — Your AI Learning Companion{% endblock %}
+
+{% block content %}
+<!-- ═══════════════════════════════════════════
+     HERO SECTION
+════════════════════════════════════════════ -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+
+      <!-- Left: Text -->
+      <div class="col-lg-6 text-center text-lg-start">
+        <span class="badge hero-badge mb-3">
+          <i class="bi bi-stars me-1"></i>Powered by IBM watsonx.ai Granite
+        </span>
+        <h1 class="hero-heading">
+          Your Smart<br/>
+          <span class="hero-accent">Study Companion</span>
+        </h1>
+        <p class="hero-sub mt-3 mb-4">
+          Get instant, grade-appropriate explanations for Maths, Science, English,
+          Social Science &amp; Computer Science. Buddy asks your class, adapts to
+          your level, and makes learning fun — 24 × 7.
+        </p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+          <a href="/chat" class="btn btn-primary btn-hero">
+            <i class="bi bi-chat-heart-fill me-2"></i>Start Learning with Buddy
+          </a>
+          <a href="/dashboard" class="btn btn-outline-secondary btn-hero-outline">
+            <i class="bi bi-bar-chart-line me-2"></i>My Dashboard
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Feature cards / illustration -->
+      <div class="col-lg-6">
+        <div class="hero-card-grid">
+
+          <div class="hero-feat-card">
+            <div class="feat-icon bg-blue-soft"><i class="bi bi-mortarboard-fill"></i></div>
+            <div>
+              <h6 class="mb-0">Grade-Adaptive</h6>
+              <p class="text-muted small mb-0">Buddy adjusts depth for Class 6–10</p>
+            </div>
+          </div>
+
+          <div class="hero-feat-card">
+            <div class="feat-icon bg-purple-soft"><i class="bi bi-patch-question-fill"></i></div>
+            <div>
+              <h6 class="mb-0">Practice Quizzes</h6>
+              <p class="text-muted small mb-0">Auto-generated MCQs & short answers</p>
+            </div>
+          </div>
+
+          <div class="hero-feat-card">
+            <div class="feat-icon bg-green-soft"><i class="bi bi-journal-check"></i></div>
+            <div>
+              <h6 class="mb-0">Step-by-Step</h6>
+              <p class="text-muted small mb-0">Never just the answer — always the method</p>
+            </div>
+          </div>
+
+          <div class="hero-feat-card">
+            <div class="feat-icon bg-orange-soft"><i class="bi bi-shield-check-fill"></i></div>
+            <div>
+              <h6 class="mb-0">Safe & Focused</h6>
+              <p class="text-muted small mb-0">Age-appropriate, education-only content</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SUBJECTS SECTION
+════════════════════════════════════════════ -->
+<section class="subjects-section">
+  <div class="container">
+    <h2 class="section-title text-center mb-2">Subjects Buddy Knows</h2>
+    <p class="text-center text-muted mb-5">Click any subject to start a conversation</p>
+    <div class="row g-4 justify-content-center">
+
+      {% set subjects = [
+        ("bi-calculator-fill",  "Mathematics",      "bg-blue-soft",   "Algebra, Geometry, Arithmetic, Trigonometry &amp; more"),
+        ("bi-lightning-fill",   "Science",          "bg-green-soft",  "Physics, Chemistry &amp; Biology for Classes 6–10"),
+        ("bi-book-fill",        "English",          "bg-purple-soft", "Grammar, Comprehension, Essay Writing &amp; Literature"),
+        ("bi-globe-americas",   "Social Science",   "bg-orange-soft", "History, Geography, Civics &amp; Economics"),
+        ("bi-cpu-fill",         "Computer Science", "bg-teal-soft",   "Algorithms, Python basics, Networking &amp; more")
+      ] %}
+
+      {% for icon, name, bg, desc in subjects %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="/chat?subject={{ name }}" class="text-decoration-none">
+          <div class="subject-card text-center h-100">
+            <div class="subject-icon {{ bg }} mx-auto mb-3">
+              <i class="bi {{ icon }}"></i>
+            </div>
+            <h6 class="fw-semibold mb-1">{{ name }}</h6>
+            <p class="text-muted small mb-0">{{ desc }}</p>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════ -->
+<section class="how-section">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">How It Works</h2>
+    <div class="row g-4 justify-content-center">
+
+      {% set steps = [
+        ("1", "bi-send-fill",        "Ask Your Question",    "Type any study question or topic — Maths problem, Science concept, English grammar, anything!"),
+        ("2", "bi-person-circle",    "Tell Buddy Your Class","Buddy asks your grade so it can tailor the explanation to exactly your level."),
+        ("3", "bi-lightbulb-fill",   "Get a Clear Answer",   "Receive a structured, step-by-step explanation with real-life examples."),
+        ("4", "bi-trophy-fill",      "Practice & Improve",   "Ask for a quiz on any topic, answer questions, and get instant feedback.")
+      ] %}
+
+      {% for num, icon, title, desc in steps %}
+      <div class="col-md-6 col-lg-3">
+        <div class="how-card text-center h-100">
+          <div class="how-step-num">{{ num }}</div>
+          <div class="how-icon mb-3"><i class="bi {{ icon }}"></i></div>
+          <h6 class="fw-semibold mb-2">{{ title }}</h6>
+          <p class="text-muted small mb-0">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CTA SECTION
+════════════════════════════════════════════ -->
+<section class="cta-section text-center">
+  <div class="container">
+    <h2 class="cta-heading mb-3">Ready to ace your next exam?</h2>
+    <p class="text-muted mb-4">Buddy is available 24/7 — no appointments, no waiting.</p>
+    <a href="/chat" class="btn btn-primary btn-lg px-5">
+      <i class="bi bi-chat-heart-fill me-2"></i>Chat with Buddy Now
+    </a>
+  </div>
+</section>
+{% endblock %}

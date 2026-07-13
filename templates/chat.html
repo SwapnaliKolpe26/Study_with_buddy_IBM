@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Chat — Study With Buddy{% endblock %}
+
+{% block extra_head %}
+<!-- Marked.js for Markdown rendering in chat bubbles -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="chat-page-wrapper">
+  <div class="chat-layout">
+
+    <!-- ── Sidebar (subject shortcuts) ──────────── -->
+    <aside class="chat-sidebar d-none d-lg-flex flex-column">
+      <div class="sidebar-header">
+        <span class="fw-semibold">Quick Topics</span>
+      </div>
+      <nav class="sidebar-nav flex-grow-1">
+
+        <p class="sidebar-section-label">Subjects</p>
+        {% set sidebar_subjects = [
+          ("bi-calculator",  "Mathematics",      "math"),
+          ("bi-lightning",   "Science",          "science"),
+          ("bi-book",        "English",          "english"),
+          ("bi-globe",       "Social Science",   "social"),
+          ("bi-cpu",         "Computer Sc.",     "cs")
+        ] %}
+        {% for icon, name, key in sidebar_subjects %}
+        <button class="sidebar-btn" onclick="insertPrompt('{{ key }}')">
+          <i class="bi {{ icon }} me-2"></i>{{ name }}
+        </button>
+        {% endfor %}
+
+        <p class="sidebar-section-label mt-3">Quick Prompts</p>
+        {% set prompts = [
+          ("bi-stars",       "Explain a concept"),
+          ("bi-clipboard2-check", "Generate a quiz"),
+          ("bi-calculator",  "Solve a problem"),
+          ("bi-translate",   "Define a term"),
+          ("bi-patch-check", "Check my answer")
+        ] %}
+        {% for icon, label in prompts %}
+        <button class="sidebar-btn" onclick="insertPrompt('{{ label }}')">
+          <i class="bi {{ icon }} me-2"></i>{{ label }}
+        </button>
+        {% endfor %}
+      </nav>
+
+      <!-- Sidebar footer -->
+      <div class="sidebar-footer">
+        <a href="/dashboard" class="sidebar-btn w-100 text-decoration-none">
+          <i class="bi bi-bar-chart me-2"></i>My Dashboard
+        </a>
+      </div>
+    </aside>
+
+    <!-- ── Main Chat Area ───────────────────────── -->
+    <div class="chat-main d-flex flex-column">
+
+      <!-- Chat header -->
+      <div class="chat-header d-flex align-items-center justify-content-between px-3 px-md-4">
+        <div class="d-flex align-items-center gap-3">
+          <div class="buddy-avatar">
+            <i class="bi bi-mortarboard-fill"></i>
+            <span class="online-dot"></span>
+          </div>
+          <div>
+            <div class="fw-semibold">Buddy</div>
+            <div class="text-muted small status-text" id="buddyStatus">Your AI Study Companion</div>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="clearChat()" title="Clear chat">
+            <i class="bi bi-trash3"></i>
+            <span class="d-none d-sm-inline ms-1">Clear</span>
+          </button>
+          <a href="/dashboard" class="btn btn-sm btn-outline-secondary d-lg-none" title="Dashboard">
+            <i class="bi bi-bar-chart"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Message window -->
+      <div class="chat-messages flex-grow-1 overflow-y-auto px-3 px-md-4 py-3" id="chatMessages">
+
+        <!-- Welcome message (shown only when history is empty) -->
+        {% if not chat_history %}
+        <div class="welcome-block text-center my-4" id="welcomeBlock">
+          <div class="welcome-avatar mx-auto mb-3">🎓</div>
+          <h5 class="fw-semibold mb-1">Hi! I'm Buddy 👋</h5>
+          <p class="text-muted mb-3">
+            I'm your personal AI study companion.<br/>
+            What would you like to learn today?
+          </p>
+          <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <button class="btn btn-sm suggestion-chip" onclick="sendSuggestion('Explain photosynthesis to me')">
+              🌱 Explain photosynthesis
+            </button>
+            <button class="btn btn-sm suggestion-chip" onclick="sendSuggestion('What is the Pythagoras theorem?')">
+              📐 Pythagoras theorem
+            </button>
+            <button class="btn btn-sm suggestion-chip" onclick="sendSuggestion('Give me a quiz on World War 2')">
+              📝 Quiz on WW2
+            </button>
+            <button class="btn btn-sm suggestion-chip" onclick="sendSuggestion('Explain Newton\'s laws of motion')">
+              🚀 Newton\'s Laws
+            </button>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Render existing chat history (from session) -->
+        {% for msg in chat_history %}
+          {% if msg.role == "user" %}
+          <div class="chat-bubble-row user-row">
+            <div class="chat-bubble user-bubble">
+              <div class="bubble-content">{{ msg.content }}</div>
+              <div class="bubble-time">{{ msg.time }}</div>
+            </div>
+          </div>
+          {% else %}
+          <div class="chat-bubble-row buddy-row">
+            <div class="buddy-bubble-avatar"><i class="bi bi-mortarboard-fill"></i></div>
+            <div class="chat-bubble buddy-bubble">
+              <div class="bubble-content markdown-body" data-raw="{{ msg.content | e }}">{{ msg.content }}</div>
+              <div class="bubble-time">{{ msg.time }}</div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+
+        <!-- Typing indicator (hidden by default) -->
+        <div class="chat-bubble-row buddy-row d-none" id="typingIndicator">
+          <div class="buddy-bubble-avatar"><i class="bi bi-mortarboard-fill"></i></div>
+          <div class="chat-bubble buddy-bubble typing-bubble">
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input area -->
+      <div class="chat-input-area px-3 px-md-4 py-3">
+        <form id="chatForm" class="d-flex gap-2 align-items-end" onsubmit="sendMessage(event)">
+          <div class="input-wrapper flex-grow-1 position-relative">
+            <textarea
+              id="userInput"
+              class="form-control chat-textarea"
+              placeholder="Ask Buddy anything… e.g. 'Explain fractions to me'"
+              rows="1"
+              maxlength="2000"
+              autofocus
+            ></textarea>
+            <span class="char-count text-muted" id="charCount">0 / 2000</span>
+          </div>
+          <button type="submit" class="btn btn-primary send-btn" id="sendBtn" title="Send (Enter)">
+            <i class="bi bi-send-fill"></i>
+          </button>
+        </form>
+        <p class="input-hint text-muted mt-1 mb-0">
+          <i class="bi bi-info-circle me-1"></i>
+          Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line
+        </p>
+      </div>
+
+    </div><!-- /chat-main -->
+  </div><!-- /chat-layout -->
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Subject/prompt shortcut helper — inserts a starter phrase into the input
+  function insertPrompt(key) {
+    const map = {
+      "math":               "I need help with a Maths topic. ",
+      "science":            "Can you explain a Science concept? ",
+      "english":            "Help me with English — grammar or literature. ",
+      "social":             "I have a question about Social Science. ",
+      "cs":                 "Explain a Computer Science concept to me. ",
+      "Explain a concept":  "Please explain this concept to me: ",
+      "Generate a quiz":    "Give me a quiz on: ",
+      "Solve a problem":    "Help me solve this problem: ",
+      "Define a term":      "What does this term mean? ",
+      "Check my answer":    "Is my answer correct? The question was: "
+    };
+    const input = document.getElementById("userInput");
+    input.value = (map[key] || key + " ") + (input.value || "");
+    input.focus();
+    autoResizeTextarea(input);
+  }
+</script>
+{% endblock %}
